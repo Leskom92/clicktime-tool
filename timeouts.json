@@ -1,0 +1,4 @@
+{
+  "getPageTimeout": 100000,
+  "defaultTimeout": 120000
+}

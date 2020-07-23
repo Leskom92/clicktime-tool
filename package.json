@@ -1,0 +1,12 @@
+{
+  "name": "clicktime",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "webdriver-manager update"
+  },
+  "dependencies": {
+    "protractor": "7.0.0",
+    "chai": "*",
+    "chai-as-promised": "*"
+  }
+}
