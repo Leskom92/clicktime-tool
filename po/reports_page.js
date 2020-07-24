@@ -1,12 +1,12 @@
 const utils = require("../utils");
-const userData = require("../accounts.json");
+const fs = require('fs-extra');
 
 const ReportsPage = function () {
     const myReportsLink = browser.element(by.css("#MyReports_Link a"));
     const runReportButton = browser.element(by.css("input.RunReportButton"));
     const reportButton = browser.element(by.css("input.reportButton"))
     const rangeFilter = browser.element(by.css("select#range"));
-    //TODO: change to lm
+    //TODO: change to mtd for debug
     const lastMonth = browser.element(by.css("select#range")).element(by.css("option[value=\"lm\"]"));
     const totalHours = browser.element(by.css(".grandTotal td:nth-child(even)"));
     const reportSummaryOption = browser.element(by.css("input#Radio4"));
@@ -23,25 +23,32 @@ const ReportsPage = function () {
         await rangeFilter.click();
         await lastMonth.click();
         await reportButton.click();
-        try {
-            await utils.elWaiter(".grandTotal td:nth-child(even)");
-        } catch (e) {
-            throw new Error (`There is no reported hours for the last month. Error: ${e}`);
+        if (!await totalHours.isPresent()) {
+            console.log("There are no reported hours for the last month")
+            const userData = {
+                "Email": browser.params.login.email,
+                "Total Hours": 0
+            };
+            await fs.writeJson("./totalHours.json", {userData}, {spaces: '\t'})
+        } else {
+            const getTotal = await totalHours.getText();
+            const userData = {
+                "Email": browser.params.login.email,
+                "Total Hours": getTotal
+            };
+            await fs.writeJson("./totalHours.json", {userData}, {spaces: '\t'})
         }
     };
 
-    this.getTotal = async () => {
-        const hours = await totalHours.getText();
-    }
-
     this.logTotal = async () => {
         const getTotal = await totalHours.getText();
-        const rows = [
-            userData.email,
-            getTotal
-        ];
-        console.log(rows);
+        const userData = {
+            "Email": browser.params.login.email,
+            "Total Hours": getTotal
+        };
+        await fs.writeJson("./totalHours.json", {userData}, {spaces: '\t'})
     };
+
 
 
 

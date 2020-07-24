@@ -1,23 +1,32 @@
-const {getPageTimeout, defaultTimeout} = require("./timeouts.json");
+const {browser} = require("protractor");
+const {expect} = require('chai');
+const loginPage = require("./po/login_page");
+const utils = require("./utils");
+const dashboardPage = require("./po/dashboard_page");
+const reportsPage = require("./po/reports_page");
 
-exports.config = {
-    directConnect: true,
+describe('The user which generates a personal report', function () {
 
-    // Capabilities to be passed to the webdriver instance.
-    capabilities: {
-        'browserName': 'chrome'
-    },
-    getPageTimeout,
+    it('should login to ClickTime and naviga', async function () {
+        await browser.waitForAngularEnabled(false);
+        await loginPage.get();
+        await loginPage.login();
 
-    // Framework to use. Jasmine is recommended.
-    framework: 'jasmine',
+        return expect(await browser.element(by.cssContainingText("div#navbar li a", "Dashboard")).isPresent()).to.be.true;
+    });
+    it('should navigate to Personal tab', async function () {
+        //await browser.waitForAngularEnabled(true);
+        await utils.elWaiter("div#primaryHeaderContainer");
+        await dashboardPage.navigateToPersonal();
 
-    // Spec patterns are relative to the current working directory when
-    // protractor is called.
-    specs: "./spec.js",
+        return expect(await browser.getCurrentUrl()).to.include("/WeekEntry");
+    });
+    it('should navigate to My Reports tab and generate a report for the last month', async function () {
+        await reportsPage.navigateToReports();
+        await reportsPage.generateReport();
+    });
+    it('should log total hours', async function () {
+        //await reportsPage.logTotal();
+    });
 
-    // Options to be passed to Jasmine.
-    jasmineNodeOpts: {
-        defaultTimeoutInterval: defaultTimeout
-    }
-};
+});
