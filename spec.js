@@ -1,33 +1,22 @@
 const {browser} = require("protractor");
-const {expect} = require('chai');
-const loginPage = require("./po/login_page");
 const utils = require("./utils");
-const dashboardPage = require("./po/dashboard_page");
+const loginPage = require("./po/login_page");
 const reportsPage = require("./po/reports_page");
 
-describe('The user which generates a personal report', function () {
-
-    it('should login to ClickTime', async function () {
+describe('The user with ClickTime account', function () {
+    it('generates a report', async function () {
         await browser.waitForAngularEnabled(false);
+        // open the login form
         await loginPage.get();
+        // perform login
         await loginPage.login();
-
-        //return expect(await dashboardLink.isPresent()).to.be.true;
-        return expect(await browser.element(by.cssContainingText("div#navbar li a", "Dashboard")).isPresent()).to.be.true;
-    });
-    it('should navigate to Personal tab', async function () {
-        //await browser.waitForAngularEnabled(true);
+        // wait for header visibility
         await utils.elWaiter("div#primaryHeaderContainer");
-        await dashboardPage.navigateToPersonal();
-
-        return expect(await browser.getCurrentUrl()).to.include("/WeekEntry");
-    });
-    it('should navigate to My Reports tab and generate a report for the last month', async function () {
-        await reportsPage.navigateToReports();
+        // open My Reports > Task Summary page
+        await reportsPage.get();
+        // wait for Run Report button visibility
+        await utils.elWaiter("input.reportButton");
+        // generate report
         await reportsPage.generateReport();
     });
-    it('should log total hours', async function () {
-        await reportsPage.logTotal();
-    });
-
 });

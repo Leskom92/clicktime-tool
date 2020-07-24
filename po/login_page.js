@@ -21,9 +21,6 @@ const LoginPage = function () {
             await utils.elWaiter(loginForm);
             await emailField.sendKeys(userName);
             await passwordField.sendKeys(userPassword);
-            //TODO: remove temp
-            console.log(userName);
-            console.log(userPassword);
             await loginButton.click();
 
             return expect(await errorMessage.isPresent()).to.be.false;

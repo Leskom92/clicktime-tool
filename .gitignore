@@ -1,9 +1,8 @@
-.idea
+ .idea
 .vscode
 node_modules
-reports/
-screenshots/
 
 *.tmp
 *.log
 *lock.json
+totalHours.json
