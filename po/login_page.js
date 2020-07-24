@@ -1,4 +1,4 @@
-const {browser, ExpectedConditions: EC} = require("protractor");
+const {browser} = require("protractor");
 const {expect} = require("chai");
 const utils = require("../utils");
 
