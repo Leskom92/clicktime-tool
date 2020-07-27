@@ -8,7 +8,6 @@
   "dependencies": {
     "protractor": "7.0.0",
     "chai": "*",
-    "chai-as-promised": "*",
     "fs-extra": "^9.0.1"
   }
 }
